@@ -1,0 +1,19 @@
+{
+  "extends": "@nolanrigo/typescript-config",
+  "include": ["./src/**/*", "./scripts/**/*"],
+  "exclude": ["./node_modules"],
+  "compilerOptions": {
+    "target": "ESNext",
+    "lib": ["ESNext", "DOM"],
+    "module": "commonjs",
+    "incremental": true,
+    "allowJs": false,
+    "checkJs": false,
+    "downlevelIteration": true,
+    "importHelpers": true,
+    "isolatedModules": true,
+    "experimentalDecorators": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true
+  }
+}

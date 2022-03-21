@@ -6,5 +6,8 @@ stdenv.mkDerivation {
     nodejs-16_x
     gnumake
   ];
+
+  NODE_ENV = "development";
+  CHROME_DIST = "./chrome-dist";
 }
 
