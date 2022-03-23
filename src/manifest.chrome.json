@@ -2,6 +2,10 @@
   "name": "Clean Twitch ASMR",
   "manifest_version": 2,
   "permissions": ["https://www.twitch.tv/", "storage"],
+  "background": {
+    "scripts": ["./background.js"],
+    "persistent": false
+  },
   "content_scripts": [
     {
       "matches": ["https://www.twitch.tv/*"],

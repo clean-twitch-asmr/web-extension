@@ -30,7 +30,7 @@ export function sidebar() {
   },
   0x0);
 
-  const sidebar = getSidebar(".side-bar-contents");
+  const sidebar = getSidebar();
 
   const sidebarWatchUnload = sidebarWatch(sidebar, function () {
     for (const sideTile of sideTilesFromSidebar(sidebar)) {
@@ -71,7 +71,8 @@ export function sidebar() {
   };
 }
 
-function getSidebar(selector: string): HTMLElement {
+function getSidebar(): HTMLElement {
+  const selector = ".side-bar-contents";
   const containers = document.querySelectorAll<HTMLElement>(selector);
 
   if (containers.length !== 1) {
