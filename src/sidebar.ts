@@ -1,4 +1,5 @@
 import debounce from "lodash/debounce";
+import { assert } from "ts-essentials";
 import { categoriesMasks } from "./categories-masks";
 import { hideList } from "./hide-list";
 
@@ -7,11 +8,9 @@ const handledClass = "clean-asmr-twitch-handled";
 const settings = {
   rerun: true,
   categories: {
+    "not-a-live": true,
     "pegi-18": true,
-    "fake-rerun": true,
     "stolen-content": true,
-    "24-7-manga": true,
-    "24-7-nature": true,
   },
 };
 
@@ -30,27 +29,29 @@ export function sidebar() {
   },
   0x0);
 
-  const sidebar = getSidebar();
+  const sidebar = document.querySelector<HTMLElement>(".side-bar-contents");
+
+  assert(sidebar, "sidebar not found");
+
+  sidebar.classList.add("cta-sidebar-container");
 
   const sidebarWatchUnload = sidebarWatch(sidebar, function () {
-    for (const sideTile of sideTilesFromSidebar(sidebar)) {
+    for (const sideTile of Array.from(sidebar.querySelectorAll<HTMLElement>(`a[href^="/"]`))) {
       // Offline channel ?
       if (isOffline(sideTile)) {
-        markAsHandled(sideTile);
+        sideTileVisibility(sideTile, true);
         continue;
       }
 
       // Hide Rerun ?
       if (settings.rerun && isRerun(sideTile)) {
         sideTileVisibility(sideTile, false);
-        markAsHandled(sideTile);
         continue;
       }
 
       // Hide by categories ?
       if (currentCategoriesMask > 0x0 && isInAnActiveCategory(sideTile, currentCategoriesMask)) {
         sideTileVisibility(sideTile, false);
-        markAsHandled(sideTile);
         continue;
       }
 
@@ -60,26 +61,9 @@ export function sidebar() {
   });
 
   return () => {
-    // Unsubscrive from watch
     sidebarWatchUnload();
-    // Remove handled class
-    for (const handledElement of Array.from(
-      sidebar.querySelectorAll<HTMLElement>(`.${handledClass}`),
-    )) {
-      handledElement.classList.remove(handledClass);
-    }
+    sidebar.classList.remove("cta-sidebar-container");
   };
-}
-
-function getSidebar(): HTMLElement {
-  const selector = ".side-bar-contents";
-  const containers = document.querySelectorAll<HTMLElement>(selector);
-
-  if (containers.length !== 1) {
-    console.warn(`we found many sidebar with selector [${selector}] we expected only one`);
-  }
-
-  return containers.item(0);
 }
 
 function sidebarWatch(sidebar: HTMLElement, cb: () => void) {
@@ -95,26 +79,12 @@ function sidebarWatch(sidebar: HTMLElement, cb: () => void) {
   return () => obs.disconnect();
 }
 
-function sideTilesFromSidebar(sidebar: HTMLElement): HTMLElement[] {
-  return Array.from(sidebar.querySelectorAll<HTMLElement>(`a[href^="/"]:not(.${handledClass})`));
-}
-
 function sideTileVisibility(sideTile: HTMLElement, show: boolean): void {
-  const parent = findSideTileParent(sideTile);
-
-  if (!parent) {
+  if (!sideTile) {
     return;
   }
 
-  parent.style.display = show ? "inherit" : "none";
-}
-
-function findSideTileParent(element: HTMLElement): HTMLElement | undefined {
-  return element.parentElement?.parentElement?.parentElement ?? undefined;
-}
-
-function markAsHandled(sideTile: HTMLElement) {
-  sideTile.classList.add(handledClass);
+  sideTile.classList.toggle("cta-sidebar-show", show);
 }
 
 function isRerun(sideTile: HTMLElement): boolean {

@@ -11,7 +11,7 @@
       "matches": ["https://www.twitch.tv/*"],
       "run_at": "document_start",
       "js": ["./document.js"],
-      "css": []
+      "css": ["./document.css"]
     }
   ]
 }

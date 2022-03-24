@@ -1,4 +1,5 @@
 import debounce from "lodash/debounce";
+import { assert } from "ts-essentials";
 import { categoriesMasks } from "./categories-masks";
 import { hideList } from "./hide-list";
 
@@ -7,11 +8,9 @@ const handledClass = "clean-asmr-twitch-handled";
 const settings = {
   rerun: true,
   categories: {
+    "not-a-live": true,
     "pegi-18": true,
-    "fake-rerun": true,
     "stolen-content": true,
-    "24-7-manga": true,
-    "24-7-nature": true,
   },
 };
 
@@ -30,7 +29,9 @@ export function directory() {
   },
   0x0);
 
-  const main = getMain();
+  const main = document.querySelector<HTMLElement>("main");
+
+  assert(main, "main not found");
 
   const mainWatchUnload = mainWatch(main, function () {
     for (const tile of tilesFromMain(main)) {
@@ -62,17 +63,6 @@ export function directory() {
       handledElement.classList.remove(handledClass);
     }
   };
-}
-
-function getMain(): HTMLElement {
-  const selector = "main";
-  const mains = document.querySelectorAll<HTMLElement>(selector);
-
-  if (mains.length !== 1) {
-    console.warn(`we found many main tags with selector [${selector}] we expected only one`);
-  }
-
-  return mains.item(0);
 }
 
 function mainWatch(main: HTMLElement, cb: () => void) {

@@ -1,0 +1,8 @@
+/* Sidebar */
+.side-bar-contents {
+  &.cta-sidebar-container {
+    a[href^="/"]:not(.cta-sidebar-show) {
+      display: none !important;
+    }
+  }
+}

@@ -22,6 +22,7 @@ fetch-hide-list:
 generate-scripts:
 	@npx esbuild --bundle --platform=browser --outdir=$(CHROME_DIST) src/document.ts
 	@npx esbuild --bundle --platform=browser --outdir=$(CHROME_DIST) src/background.ts
+	@npx sass --no-source-map src/document.scss $(CHROME_DIST)/document.css
 
 .PHONY: generate-manifest
 generate-manifest:
