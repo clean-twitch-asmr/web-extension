@@ -6,3 +6,11 @@
     }
   }
 }
+
+main {
+  &.cta-directory-container {
+    [data-target][style^="order:"]:not(.cta-directory-show) {
+      display: none !important;
+    }
+  }
+}

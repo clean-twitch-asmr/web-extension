@@ -80,10 +80,6 @@ function sidebarWatch(sidebar: HTMLElement, cb: () => void) {
 }
 
 function sideTileVisibility(sideTile: HTMLElement, show: boolean): void {
-  if (!sideTile) {
-    return;
-  }
-
   sideTile.classList.toggle("cta-sidebar-show", show);
 }
 

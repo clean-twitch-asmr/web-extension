@@ -33,19 +33,21 @@ export function directory() {
 
   assert(main, "main not found");
 
+  main.classList.add("cta-directory-container");
+
   const mainWatchUnload = mainWatch(main, function () {
-    for (const tile of tilesFromMain(main)) {
+    for (const tile of Array.from(
+      main.querySelectorAll<HTMLElement>(`[data-target][style^="order:"]`),
+    )) {
       // Hide Rerun ?
       if (settings.rerun && isRerun(tile)) {
         tileVisibility(tile, false);
-        markAsHandled(tile);
         continue;
       }
 
       // Hide by categories ?
       if (currentCategoriesMask > 0x0 && isInAnActiveCategory(tile, currentCategoriesMask)) {
         tileVisibility(tile, false);
-        markAsHandled(tile);
         continue;
       }
 
@@ -56,12 +58,7 @@ export function directory() {
 
   return () => {
     mainWatchUnload();
-    // Remove handled class
-    for (const handledElement of Array.from(
-      main.querySelectorAll<HTMLElement>(`.${handledClass}`),
-    )) {
-      handledElement.classList.remove(handledClass);
-    }
+    main.classList.remove("cta-directory-container");
   };
 }
 
@@ -78,32 +75,8 @@ function mainWatch(main: HTMLElement, cb: () => void) {
   return () => obs.disconnect();
 }
 
-function tilesFromMain(main: HTMLElement): HTMLElement[] {
-  return Array.from(
-    main.querySelectorAll<HTMLElement>(
-      `[data-target="directory-container"] article[data-a-id^="card-"]:not(.${handledClass})`,
-    ),
-  );
-}
-
 function tileVisibility(tile: HTMLElement, show: boolean): void {
-  const parent = findTileParent(tile);
-
-  if (!parent) {
-    return;
-  }
-
-  if (!show) {
-    parent.style.display = "none";
-  }
-}
-
-function findTileParent(element: HTMLElement): HTMLElement | undefined {
-  return element.parentElement?.parentElement?.parentElement?.parentElement ?? undefined;
-}
-
-function markAsHandled(tile: HTMLElement) {
-  tile.classList.add(handledClass);
+  tile.classList.toggle("cta-directory-show", show);
 }
 
 function isRerun(tile: HTMLElement): boolean {
@@ -117,7 +90,11 @@ function isRerun(tile: HTMLElement): boolean {
 }
 
 function isInAnActiveCategory(tile: HTMLElement, categoriesMask: number): boolean {
-  const [, name] = tile.getAttribute("data-a-id")?.match(/^card-(.*)$/) ?? [];
+  const [, name] =
+    tile
+      .querySelector("[data-a-id]")
+      ?.getAttribute("data-a-id")
+      ?.match(/^card-(.*)$/) ?? [];
 
   if (!name) {
     return false;

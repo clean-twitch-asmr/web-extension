@@ -3,7 +3,7 @@ import { directory } from "./directory";
 export function main() {
   const locationWatchUnload = locationWatch(function (path) {
     // Directory
-    if (path.startsWith("/directory/game/ASMR")) {
+    if (path.toLowerCase().startsWith("/directory/game/asmr")) {
       const directoryUnload = directory();
 
       return () => directoryUnload();
