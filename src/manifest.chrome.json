@@ -1,5 +1,7 @@
 {
-  "name": "Clean Twitch ASMR",
+  "name": "__MSG_appName__",
+  "description": "__MSG_appDesc__",
+  "default_locale": "en",
   "manifest_version": 2,
   "permissions": ["https://www.twitch.tv/", "storage"],
   "background": {

@@ -12,7 +12,7 @@ clean:
 	@mkdir $(CHROME_DIST)
 
 .PHONY: build # Build the Chrome web extension
-build: clean generate-manifest generate-scripts
+build: clean generate-manifest generate-scripts copy-files build-extension
 
 .PHONY: fetch-hide-list
 fetch-hide-list:
@@ -24,6 +24,14 @@ generate-scripts:
 	@npx esbuild --bundle --platform=browser --outdir=$(CHROME_DIST) src/background.ts
 	@npx sass --no-source-map src/document.scss $(CHROME_DIST)/document.css
 
+.PHONY: copy-files
+copy-files:
+	@cp -r _locales $(CHROME_DIST)
+
 .PHONY: generate-manifest
 generate-manifest:
 	@npx ts-node ./scripts/generate-manifest.ts
+
+.PHONY: build-extension
+build-extension:
+	@npx web-ext build -s $(CHROME_DIST) --overwrite-dest

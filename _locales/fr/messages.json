@@ -1,0 +1,8 @@
+{
+  "appName": {
+    "message": "Clean Twitch ASMR"
+  },
+  "appDesc": {
+    "message": "Cache les chaines ASMR indésirables sur twitch.tv"
+  }
+}
