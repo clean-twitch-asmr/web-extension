@@ -12,7 +12,7 @@ clean:
 	@mkdir $(CHROME_DIST)
 
 .PHONY: build # Build the Chrome web extension
-build: clean generate-manifest generate-scripts copy-files build-extension
+build: clean generate-manifest generate-scripts copy-files
 
 .PHONY: fetch-hide-list
 fetch-hide-list:
